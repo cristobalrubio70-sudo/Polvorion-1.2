@@ -909,10 +909,10 @@ def mod_accesos():
                   delta_color="inverse" if personas>=MAX_PERSONAS else "normal")
         conn = get_conn()
         acc  = pd.read_sql("SELECT * FROM accesos ORDER BY fecha_hora DESC LIMIT 50",conn)
-        hoy_acc = pd.read_sql(
+        hoy_acc = conn.execute(
             "SELECT COUNT(*) as n FROM accesos WHERE fecha_hora LIKE ?",
-            conn,(str(date.today())+"%",)
-        ).iloc[0]["n"]
+            (str(date.today())+"%",)
+        ).fetchone()[0]
         conn.close()
         c2.metric("Accesos hoy",int(hoy_acc))
         c3.metric("Límite normativo",str(MAX_PERSONAS)+" personas")
